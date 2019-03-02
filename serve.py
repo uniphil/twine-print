@@ -8,7 +8,7 @@ import json
 UPDOWN_MASK = 1 << 2
 
 def get_choice(s, n):
-    msg = 'oops, gotta be button 0-{} for this choice\n\n\n'.format(n).encode('ascii')
+    msg = 'oops, gotta be button 0-{} for this choice\n\n\n'.format(n-1).encode('ascii')
     while True:
         c = s.read(1)
         try:
