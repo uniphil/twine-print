@@ -7,6 +7,19 @@ import json
 
 UPDOWN_MASK = 1 << 2
 
+def get_choice(s, n):
+    msg = 'oops, gotta be button 0-{} for this choice\n\n\n'.format(n).encode('ascii')
+    while True:
+        c = s.read(1)
+        try:
+            choice = int(c)
+        except ValueError:
+            s.write(msg)
+            continue
+        if choice < 0 or choice > n -1:
+            s.write(msg)
+            continue
+        return choice
 
 async def play(websocket, path):
     s = Serial('/dev/cu.usbmodem461', 9600)
@@ -31,9 +44,9 @@ async def play(websocket, path):
 
         show('\n\n\n')
         s.reset_input_buffer()
-        choice = s.read(1)
+        choice = get_choice(s, len(data['links']))
 
-        passage = data['links'][int(choice)]['passage']
+        passage = data['links'][choice]['passage']
         message = json.dumps({ 'passage': passage })
         await websocket.send(message)
 
