@@ -32,5 +32,4 @@ $(document).on(':passagerender', ev => {
     ws.then(w => {
         w.send(JSON.stringify(nice))
     });
-    //console.log('nice', nice);
 });

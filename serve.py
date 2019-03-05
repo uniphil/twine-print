@@ -46,6 +46,8 @@ async def play(websocket, path):
 
         show('\n\n\n')
         s.reset_input_buffer()
+        if len(data['links']) == 0:
+            continue
         choice = get_choice(s, len(data['links']))
 
         passage = data['links'][choice]['passage']
