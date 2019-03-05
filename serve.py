@@ -9,7 +9,7 @@ UPDOWN_MASK = 1 << 2
 
 def get_choice(s, n):
     msg = 'button options: {}\n\n\n'\
-        .format(map(str, ', '.join()))\
+        .format(', '.join(map(str, range(n))))\
         .encode('ascii')
     while True:
         c = s.read(1)
