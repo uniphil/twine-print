@@ -1,3 +1,4 @@
+#!venv/bin/python
 #!/usr/bin/env python
 
 import asyncio
@@ -23,8 +24,15 @@ def get_choice(s, n):
             continue
         return choice
 
+import sys
+try:
+    port = sys.argv[1]
+except IndexError:
+    sys.stderr.write('missing serial port (probably /dev/tty.usbserial-something)\n')
+    sys.exit(1)
+
 async def play(websocket, path):
-    s = Serial('/dev/cu.usbmodem1411', 9600)
+    s = Serial(port, 9600)
 
     s.write(0x00)
     s.write(0xFF)
