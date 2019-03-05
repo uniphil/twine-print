@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import print_function  # maybe py2 support??
 
 import asyncio
 import websockets
@@ -9,8 +8,8 @@ import json
 UPDOWN_MASK = 1 << 2
 
 def get_choice(s, n):
-    msg = 'button options: {}\n\n\n'
-        .format(map(str, ', '.join()))
+    msg = 'button options: {}\n\n\n'\
+        .format(map(str, ', '.join()))\
         .encode('ascii')
     while True:
         c = s.read(1)
