@@ -1,9 +1,9 @@
 #include <SoftwareSerial.h>
 
-#define BUTTON_0 2
-#define BUTTON_1 3
-#define BUTTON_2 4
-#define BUTTON_3 5
+#define BUTTON_0 4
+#define BUTTON_1 5
+#define BUTTON_2 7
+#define BUTTON_3 6
 
 #define DEBOUNCE 300
 
@@ -11,7 +11,7 @@ SoftwareSerial Thermal(10, 9);
 
 void setup() {
   Serial.begin(9600);
-  Thermal.begin(19200);
+  Thermal.begin(9600);
   pinMode(BUTTON_0, INPUT_PULLUP);
   pinMode(BUTTON_1, INPUT_PULLUP);
   pinMode(BUTTON_2, INPUT_PULLUP);

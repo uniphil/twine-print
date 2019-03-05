@@ -22,7 +22,7 @@ def get_choice(s, n):
         return choice
 
 async def play(websocket, path):
-    s = Serial('/dev/cu.usbmodem461', 9600)
+    s = Serial('/dev/cu.usbmodem1411', 9600)
 
     s.write(0x00)
     s.write(0xFF)
