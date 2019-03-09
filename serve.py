@@ -3,6 +3,7 @@
 
 import asyncio
 import websockets
+from time import sleep
 from serial import Serial
 import json
 
@@ -24,45 +25,48 @@ def get_choice(s, n):
             continue
         return choice
 
-import sys
-try:
-    port = sys.argv[1]
-except IndexError:
-    sys.stderr.write('missing serial port (probably /dev/tty.usbserial-something)\n')
-    sys.exit(1)
 
-async def play(websocket, path):
-    s = Serial(port, 9600)
+def play(s):
 
-    s.write(0x00)
-    s.write(0xFF)
-    s.write(0x1B)  # esc
-    s.write(0x21)  # '!'
-    s.write(UPDOWN_MASK)
+    async def handler(websocket, path):
 
-    def show(m):
-        print(m)
-        s.write(m.encode('ascii'))
-        s.write(b'\n')
+        def show(m):
+            print(m)
+            s.write(m.encode('ascii'))
+            s.write(b'\n')
 
-    async for message in websocket:
-        data = json.loads(message)
-        show(data['text'])
-        show('\n')
-        for i, o in enumerate(data['links']):
-            show('{}) {}'.format(i, o['name']))
+        async for message in websocket:
+            data = json.loads(message)
+            show(data['text'])
+            show('\n')
+            for i, o in enumerate(data['links']):
+                show('{}) {}'.format(i, o['name']))
 
-        show('\n\n\n')
-        s.reset_input_buffer()
-        if len(data['links']) == 0:
-            continue
-        choice = get_choice(s, len(data['links']))
+            show('\n\n\n')
+            s.reset_input_buffer()
+            if len(data['links']) == 0:
+                continue
+            choice = get_choice(s, len(data['links']))
 
-        passage = data['links'][choice]['passage']
-        message = json.dumps({ 'passage': passage })
-        await websocket.send(message)
+            passage = data['links'][choice]['passage']
+            message = json.dumps({ 'passage': passage })
+            await websocket.send(message)
+    return handler
 
-asyncio.get_event_loop().run_until_complete(
-    websockets.serve(play, 'localhost', 5000))
-asyncio.get_event_loop().run_forever()
 
+if __name__ == '__main__':
+    import sys
+    try:
+        port = sys.argv[1]
+    except IndexError:
+        sys.stderr.write('missing serial port (probably /dev/tty.usbserial-something)\n')
+        sys.exit(1)
+
+    ser = Serial(port, 9600)
+
+    asyncio.get_event_loop().run_until_complete(
+        websockets.serve(play(ser), 'localhost', 5000))
+    print('started websocket server')
+
+    asyncio.get_event_loop().run_forever()
+    print('bye!')
