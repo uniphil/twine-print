@@ -5,9 +5,8 @@ import asyncio
 import websockets
 from time import sleep
 from serial import Serial
+from serial.tools import list_ports
 import json
-
-UPDOWN_MASK = 1 << 2
 
 class RequestRestart(Exception):
     pass
@@ -74,8 +73,15 @@ if __name__ == '__main__':
     try:
         port = sys.argv[1]
     except IndexError:
-        sys.stderr.write('missing serial port (probably /dev/tty.usbserial-something)\n')
-        sys.exit(1)
+        maybes = list(list_ports.grep('usb'))
+        if len(maybes) == 0:
+            sys.stderr.write('missing serial port (probably /dev/tty.usbserial-something)\n')
+            sys.exit(1)
+        if len(maybes) > 1:
+            sys.stderr.write('not sure which serial port to use. likely candidates:\n{}\n'.format(
+                '\n'.join(map(lambda m: '{}\t{}\t{}'.format(m.device, m.description, m.manufacturer), maybes))))
+            sys.exit(1)
+        port = maybes[0].device
 
     ser = Serial(port, 9600)
     sleep(1)  # ignore first reset
