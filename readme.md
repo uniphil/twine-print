@@ -30,12 +30,22 @@ running twine things
 - copy `twine.js` into the story javascript
 - play the story (after starting python)
 
-for now, you might need to restart python and the story each time it comes to the end.
+press the `reset` button on the arduino to reset the story, or if things stop responding.
 
+
+## including images
+
+1. copy the image inside the `images/` folder from the github stuff
+2. include it in a passage using this syntax: `{{filename.jpg}}`.
+
+eg., if your image is at `images/hello.png`, do `{{hello.png}}` in the passage text where you want it.
+
+- large images will automatically be scaled down to 384 px wide. to print smaller, resize them in a graphics program.
+- boring-but-pretty-good dithering is applied for half-toning. I'd like to make that configurable -- if you really want noise dither or regular thresholding lmk.
 
 
 ----
 
-not helpful probably:
+not helpful probably just for phil:
 
-nix-shell -p python36Packages.pyserial python36Packages.websockets
+nix-shell -p python36Packages.pyserial python36Packages.websockets python36Packages.pillow
