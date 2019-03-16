@@ -11,13 +11,15 @@ SoftwareSerial Thermal(10, 9);
 
 void setup() {
   Serial.begin(9600);
-  Thermal.begin(9600);
+  Thermal.begin(19200);
   pinMode(BUTTON_0, INPUT_PULLUP);
   pinMode(BUTTON_1, INPUT_PULLUP);
   pinMode(BUTTON_2, INPUT_PULLUP);
   pinMode(BUTTON_3, INPUT_PULLUP);
   pinMode(8, OUTPUT);
   digitalWrite(8, LOW);  // fake ground
+  // reset the game on startup
+  Serial.write(255);
 }
 
 unsigned long last_press = 0;
